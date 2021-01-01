@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:flutter_radio/flutter_radio.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,19 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
         primarySwatch: Colors.blue,
-        // This makes the visual density adapt to the platform that you run
-        // the app on. For desktop platforms, the controls will be smaller and
-        // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: HomePage(),
@@ -40,18 +30,45 @@ class HomePage extends StatelessWidget{
   }
 }
 
-class Button extends StatelessWidget {
+class Button extends StatefulWidget {
+  @override
+  _ButtonState createState() => _ButtonState();
+}
+
+class _ButtonState extends State<Button> {
+
+  static const streamUrl = "https://adfradio.com.ar/radio/8000/live?0";
+  bool isPlaying;
+
+  Future<void> audioStart() async {
+    await FlutterRadio.audioStart();
+    print('Audio Start OK');
+  }
+
+  @override
+  void initState() {
+    audioStart();
+    playingStatus();
+    super.initState();
+  }
+
+  Future playingStatus() async {
+    bool isP = await FlutterRadio.isPlaying();
+    setState(() {
+      isPlaying = isP;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: ElevatedButton(
         onPressed: () {
+          FlutterRadio.playOrPause(url: streamUrl);
+          playingStatus();
           final snackBar = SnackBar(
             content: Text('Yay! A SnackBar!'),
           );
-
-          // Find the Scaffold in the widget tree and use
-          // it to show a SnackBar.
           Scaffold.of(context).showSnackBar(snackBar);
         },
         child: Text('Show SnackBar'),
