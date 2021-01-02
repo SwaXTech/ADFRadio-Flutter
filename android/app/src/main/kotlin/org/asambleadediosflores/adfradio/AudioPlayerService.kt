@@ -1,9 +1,12 @@
 package org.asambleadediosflores.adfradio
 
-import android.app.Service
+import android.app.*
+import android.app.Notification.MediaStyle
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.os.Build
 import android.os.IBinder
 import android.util.Log
 import com.google.android.exoplayer2.C
@@ -17,12 +20,21 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 
+
 class AudioPlayerService : Service() {
     var player: SimpleExoPlayer? = null
     private var dataSourceFactory: DefaultDataSourceFactory? = null
     private var mediaSource: MediaSource? = null
     private val type = 0
+    private var builder: Notification.Builder? = null
+    private var noti: Notification? = null
+    private var manager: NotificationManager? = null
+    private val NOTIFICATION_ID = 777
+    private val CHANNEL_ID = "CID"
+
     override fun onCreate() {
+        startForeground()
+        Log.d("Radio Player", "Radio service created")
         super.onCreate()
         val context: Context = this
         val audioAttributes = AudioAttributes.Builder()
@@ -42,6 +54,38 @@ class AudioPlayerService : Service() {
                 context,  //TODO: Abstraer ADF Radio
                 Util.getUserAgent(context, "ADFRadio")
         )
+    }
+
+    private fun startForeground() {
+
+        val logoBitmap = BitmapFactory.decodeResource(resources, R.drawable.boton)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val goApp = Intent(this, MainActivity::class.java)
+            val openActivity = PendingIntent.getActivity(applicationContext, 0, goApp, 0)
+            builder = Notification.Builder(this)
+            builder!!.setSmallIcon(R.drawable.boton)
+            builder!!.setContentTitle("ADFRadio")
+            builder!!.setContentText("Asamblea de Dios Flores")
+            builder!!.setLargeIcon(logoBitmap)
+            builder!!.setStyle(MediaStyle())
+            builder!!.setContentIntent(openActivity)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                builder!!.setChannelId(CHANNEL_ID)
+            }
+            noti = builder!!.build()
+            manager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                val notificationChannel = NotificationChannel(CHANNEL_ID, "NOTI", NotificationManager.IMPORTANCE_MIN)
+
+                //Las siguientes dos lineas de código son para que no vibre en 8.0.
+                notificationChannel.vibrationPattern = longArrayOf(0)
+                notificationChannel.enableVibration(true)
+                manager!!.createNotificationChannel(notificationChannel)
+            }
+            manager!!.notify(NOTIFICATION_ID, noti)
+            startForeground(NOTIFICATION_ID, noti) //AGREGADO PARA 8.0
+        }
     }
 
     override fun onDestroy() {
