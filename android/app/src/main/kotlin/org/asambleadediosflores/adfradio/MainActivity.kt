@@ -12,7 +12,6 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 
 
 class MainActivity() : FlutterActivity() {
-    private val CHANNEL = "asambleadediosflores.org/radio"
 
     private var player: Intent? = null
 
@@ -21,11 +20,7 @@ class MainActivity() : FlutterActivity() {
         player = Intent(this, AudioPlayerService::class.java)
 
         GeneratedPluginRegistrant.registerWith(FlutterEngine(this))
-        MethodChannel(flutterView, CHANNEL).setMethodCallHandler { call, result ->
-            Log.d("Platform Channel", "Called!!!! " + call.method +  " ")
-            val function = toggleRadioState(call)
-            function(this, player!!)
-        }
+        receivePlatformChannelMessage(this, player!!, flutterView)
         
     }
 
@@ -33,11 +28,5 @@ class MainActivity() : FlutterActivity() {
         super.onDestroy()
         stop(this, player!!)
     }
-
-    private fun toggleRadioState(call: MethodCall): (Context, Intent) -> Unit {
-        return when(call.method){
-            "play" -> ::play
-            else     -> ::stop
-        }
-    }
+    
 }

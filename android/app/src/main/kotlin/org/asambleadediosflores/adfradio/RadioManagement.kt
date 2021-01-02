@@ -6,11 +6,8 @@ import android.util.Log
 import com.google.android.exoplayer2.util.Util
 
 
-fun play(context: Context, player: Intent){ 
-    Log.d("RadioManagement", "Starting...")
+fun play(context: Context, player: Intent){
     Util.startForegroundService(context, player)
-    Log.d("RadioManagement", "Is running: " +  isPlaying(context, player))
-    
 }
 
 fun stop(context: Context, player: Intent){

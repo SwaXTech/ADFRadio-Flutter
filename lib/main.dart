@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:adfradio/radio_api/radio_api.dart';
 
 void main() {
   runApp(MyApp());
@@ -44,18 +44,12 @@ class HomePage extends StatelessWidget{
 class Button extends StatelessWidget {
 
 
-  static const platform = const MethodChannel('asambleadediosflores.org/radio');
-
-  Future<void> sendPlatformChannelMessage() async{
-    await platform.invokeMethod('play');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Center(
       child: ElevatedButton(
         onPressed: () {
-          sendPlatformChannelMessage();
+          RadioApi.toggleState();
           final snackBar = SnackBar(
             content: Text('Yay! A SnackBar!'),
           );
