@@ -16,7 +16,10 @@ import os
     radioChannel.setMethodCallHandler({
       (call: FlutterMethodCall, result: FlutterResult) -> Void in
         os_log("This is a default message.")
-        
+        let player = FRadioPlayer.shared
+        player.radioURL = URL(string: "https://adfradio.com.ar/radio/8000/live")
+        player.play()
+
     })
 
     
