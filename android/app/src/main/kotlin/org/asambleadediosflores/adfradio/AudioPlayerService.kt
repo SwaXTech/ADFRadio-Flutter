@@ -25,12 +25,12 @@ class AudioPlayerService : Service() {
     var player: SimpleExoPlayer? = null
     private var dataSourceFactory: DefaultDataSourceFactory? = null
     private var mediaSource: MediaSource? = null
-    private val type = 0
     private var builder: Notification.Builder? = null
     private var noti: Notification? = null
     private var manager: NotificationManager? = null
     private val NOTIFICATION_ID = 777
     private val CHANNEL_ID = "CID"
+    private var listener: MetadataListener? = null
 
     override fun onCreate() {
         startForeground()
@@ -48,12 +48,16 @@ class AudioPlayerService : Service() {
             Log.i("Metadata:", "Info: " + metadata[0])
             if (metadata.length() != 0) { // TODO: Extraer info
                 com.google.android.exoplayer2.util.Log.i("Exoplayer INFO", metadata[0].toString())
+                currentSong.setMetadata(metadata[0].toString())
             }
         })
         dataSourceFactory = DefaultDataSourceFactory(
                 context,  //TODO: Abstraer ADF Radio
                 Util.getUserAgent(context, "ADFRadio")
         )
+
+        
+        
     }
 
     private fun startForeground() {
@@ -86,11 +90,23 @@ class AudioPlayerService : Service() {
             manager!!.notify(NOTIFICATION_ID, noti)
             startForeground(NOTIFICATION_ID, noti) //AGREGADO PARA 8.0
         }
+
+        listener = object : MetadataListener {
+            override fun onSongChanged() {
+                builder!!.setContentTitle(currentSong.getTitle())
+                builder!!.setContentText(currentSong.getArtist())
+                noti = builder!!.build()
+                manager!!.notify(NOTIFICATION_ID, noti)
+            }
+        }
+
+        Song.addEventListener(listener!!)
     }
 
     override fun onDestroy() {
         player!!.release()
         player = null
+        Song.removeListener(listener!!)
         super.onDestroy()
     }
 

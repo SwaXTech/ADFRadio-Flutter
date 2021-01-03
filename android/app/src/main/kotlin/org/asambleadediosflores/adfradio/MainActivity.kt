@@ -14,6 +14,8 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 class MainActivity() : FlutterActivity() {
 
     private var player: Intent? = null
+    private lateinit var api : InfoAPI
+    private var listener: MetadataListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,6 +23,15 @@ class MainActivity() : FlutterActivity() {
 
         GeneratedPluginRegistrant.registerWith(FlutterEngine(this))
         receivePlatformChannelMessage(this, player!!, flutterView)
+        //flutterView_ = flutterView
+
+        api = InfoAPI(flutterView)
+        listener = object : MetadataListener {
+            override fun onSongChanged() {
+                api.sendMetadata(currentSong.getArtist()!!, currentSong.getTitle()!!)
+            }
+        }
+        Song.addEventListener(listener!!)
         
     }
 

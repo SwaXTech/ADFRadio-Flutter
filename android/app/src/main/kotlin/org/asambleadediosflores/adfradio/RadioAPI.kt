@@ -6,15 +6,14 @@ import android.util.Log
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.FlutterView
 
-val CHANNEL = "/radio"
+val RADIOCHANNEL = "/radio"
 val PLAY = "play"
 val STOP = "stop"
 val ISPLAYING = "isPlaying"
 
 fun receivePlatformChannelMessage(context: Context, player: Intent, flutterView: FlutterView) {
-    MethodChannel(flutterView, CHANNEL).setMethodCallHandler { call, result ->
+    MethodChannel(flutterView, RADIOCHANNEL).setMethodCallHandler { call, result ->
         Log.d("Platform Channel", "Called!!!! " + call.method + " ")
-        
         when(call.method){
             
             PLAY -> play(context, player)
@@ -22,4 +21,5 @@ fun receivePlatformChannelMessage(context: Context, player: Intent, flutterView:
             ISPLAYING -> result.success(isPlaying(context, player))
         }
     }
+    
 }

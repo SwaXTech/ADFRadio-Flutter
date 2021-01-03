@@ -1,3 +1,4 @@
+import 'package:adfradio/info_api/info_api.dart';
 import 'package:flutter/material.dart';
 import 'package:adfradio/radio_api/radio_api.dart';
 
@@ -9,6 +10,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+
+    var info = InfoAPI();
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
