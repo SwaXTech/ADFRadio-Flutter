@@ -40,7 +40,16 @@ class HomePage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Button()
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color.fromRGBO(15, 15, 15, 1),Color.fromRGBO(66, 71, 89, 1)],
+            begin: FractionalOffset.bottomRight,
+            end: FractionalOffset.topLeft
+          )
+        ),
+        child: Button(),
+      )
     );
   }
 }
