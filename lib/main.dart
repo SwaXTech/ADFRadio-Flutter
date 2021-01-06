@@ -30,12 +30,15 @@ class HomePage extends StatelessWidget{
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color.fromRGBO(15, 15, 15, 1),Color.fromRGBO(66, 71, 89, 1)],
+            colors: [Colors.black,Color.fromRGBO(66, 71, 89, 1)],
+            stops: [0.2, 0.9],
             begin: FractionalOffset.bottomRight,
             end: FractionalOffset.topLeft
           )
         ),
-        child: Button(),
+        child: Center(
+            child: Button(),
+        ),
       )
     );
   }
@@ -44,17 +47,17 @@ class HomePage extends StatelessWidget{
 class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {
-          RadioApi.toggleState();
-          final snackBar = SnackBar(
-            content: Text('Yay! A SnackBar!'),
-          );
-          Scaffold.of(context).showSnackBar(snackBar);
-        },
-        child: Text('Show SnackBar'),
+    return InkWell(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(39, 39, 39, 1),
+          borderRadius: BorderRadius.circular(100),
+        ),
+        height: 100,
+        width: 100,
+        child: Icon(Icons.play_arrow, size: 35, color: Colors.white,),
       ),
+      onTap: RadioApi.toggleState,
     );
   }
 }
