@@ -1,4 +1,5 @@
 import 'package:adfradio/info_api/info_api.dart';
+import 'package:adfradio/util/background.dart';
 import 'package:flutter/material.dart';
 import 'package:adfradio/radio_api/radio_api.dart';
 
@@ -28,15 +29,8 @@ class HomePage extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.black,Color.fromRGBO(66, 71, 89, 1)],
-            stops: [0.2, 0.9],
-            begin: FractionalOffset.bottomRight,
-            end: FractionalOffset.topLeft
-          )
-        ),
-        child: Center(
+        decoration: buildBackground(),
+      child: Center(
             child: Button(),
         ),
       )
