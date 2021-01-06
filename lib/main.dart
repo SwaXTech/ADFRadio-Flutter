@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
     var info = InfoAPI();
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'ADFRadio',
       theme: ThemeData(
         // This is the theme of your application.
         //
