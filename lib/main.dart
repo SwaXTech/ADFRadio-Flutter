@@ -28,11 +28,13 @@ class HomePage extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: buildBackground(),
-      child: Center(
-            child: Button(),
-        ),
+      body: Stack(
+        children: [
+          Container(
+            decoration: buildBackground()
+          ),
+          Positioned(child: Button(), bottom: 150, left: 155,)
+        ],
       )
     );
   }
