@@ -41,7 +41,12 @@ class HomePage extends StatelessWidget{
   }
 }
 
-class Button extends StatelessWidget {
+class Button extends StatefulWidget {
+  @override
+  _ButtonState createState() => _ButtonState();
+}
+
+class _ButtonState extends State<Button> {
   @override
   Widget build(BuildContext context) {
 
