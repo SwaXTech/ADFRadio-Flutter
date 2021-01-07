@@ -34,7 +34,7 @@ class HomePage extends StatelessWidget{
           Container(
             decoration: buildBackground()
           ),
-          Positioned(child: Button(), bottom: 150, left: 150,)
+          Positioned(child: Button(), bottom: 150, left: 148,)
         ],
       )
     );
@@ -44,17 +44,20 @@ class HomePage extends StatelessWidget{
 class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+
+    return ElevatedButton(
       child: Container(
-        decoration: BoxDecoration(
-          color: Color.fromRGBO(39, 39, 39, 0.7),
-          borderRadius: BorderRadius.circular(100),
-        ),
-        height: 120,
-        width: 120,
-        child: Icon(Icons.play_arrow, size: 50, color: Colors.white,),
+        width: 100,
+        height: 100,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(shape: BoxShape.circle),
+        child: Icon(Icons.play_arrow, size: 40,)
       ),
-      onTap: RadioApi.toggleState,
+      style: ElevatedButton.styleFrom(
+          shape: CircleBorder(),
+          primary: Color.fromRGBO(39, 39, 39, 0.4)
+      ),
+      onPressed: RadioApi.toggleState,
     );
   }
 }
