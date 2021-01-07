@@ -1,8 +1,7 @@
-import 'package:adfradio/info_api/info_api.dart';
+import 'package:adfradio/platform_api/info_api.dart';
 import 'package:adfradio/ui/buttons.dart';
 import 'package:adfradio/util/background.dart';
 import 'package:flutter/material.dart';
-import 'package:adfradio/radio_api/radio_api.dart';
 
 void main() {
   Paint.enableDithering = true;
