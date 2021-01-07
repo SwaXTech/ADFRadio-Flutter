@@ -1,12 +1,6 @@
-
 import 'package:adfradio/platform_api/radio_api.dart';
 import 'package:flutter/material.dart';
-import 'package:get/state_manager.dart';
-
-abstract class ButtonController extends GetxController{
-  IconData icon;
-  void onPressed();
-}
+import 'package:adfradio/controllers/button_controller.dart';
 
 class RadioController extends ButtonController{
 
@@ -31,6 +25,4 @@ class RadioController extends ButtonController{
 
   @override
   var icon;
-  
-  
 }

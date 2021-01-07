@@ -4,6 +4,8 @@ import 'package:adfradio/ui/buttons.dart';
 import 'package:adfradio/util/background.dart';
 import 'package:flutter/material.dart';
 
+import 'controllers/share_controller.dart';
+
 void main() {
   Paint.enableDithering = true;
   runApp(MyApp());
@@ -35,7 +37,14 @@ class HomePage extends StatelessWidget{
           Container(
             decoration: buildBackground()
           ),
-          Positioned(child: Button(radius: 100.0, id: 'playButton', iconSize: 40.0, controller: RadioController(icon: Icons.play_arrow)), bottom: 150, left: 148,)
+          Row(
+            children: [
+              Expanded(child: Button(radius: 50.0, id: 'shareButton', iconSize: 20.0, controller: ShareController(icon: Icons.share))),
+              Expanded(child: Button(radius: 100.0, id: 'playButton', iconSize: 40.0, controller: RadioController(icon: Icons.play_arrow))),
+              Expanded(child: Button(radius: 50.0, id: 'sendMessageButton', iconSize: 20.0, controller: ShareController(icon: Icons.message))),
+
+            ],
+          )
         ],
       )
     );

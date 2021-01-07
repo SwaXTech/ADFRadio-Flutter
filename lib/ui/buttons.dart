@@ -1,4 +1,4 @@
-import 'package:adfradio/controllers/radio_controller.dart';
+import 'package:adfradio/controllers/button_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -27,14 +27,14 @@ class Button extends StatelessWidget {
     return GetBuilder<ButtonController>(
       init: controller,
       builder: (_controller) => ElevatedButton(
-        child: buildButton(_controller),
+        child: buildButton(),
         style: circleButtonStyle(buttonColor),
         onPressed: _controller.onPressed,
       ),
     );
   }
 
-  Container buildButton(_controller) {
+  Container buildButton() {
     return Container(
         width: radius,
         height: radius,
