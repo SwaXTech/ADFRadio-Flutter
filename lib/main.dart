@@ -1,3 +1,4 @@
+import 'package:adfradio/controllers/radio_controller.dart';
 import 'package:adfradio/platform_api/info_api.dart';
 import 'package:adfradio/ui/buttons.dart';
 import 'package:adfradio/util/background.dart';
@@ -34,7 +35,7 @@ class HomePage extends StatelessWidget{
           Container(
             decoration: buildBackground()
           ),
-          Positioned(child: StatefulButton(radius: 100.0, ), bottom: 150, left: 148,)
+          Positioned(child: Button(radius: 100.0, id: 'playButton', iconSize: 40.0, controller: RadioController(icon: Icons.play_arrow)), bottom: 150, left: 148,)
         ],
       )
     );
