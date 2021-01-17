@@ -4,6 +4,7 @@ import 'package:adfradio/ui/buttons.dart';
 import 'package:adfradio/util/background.dart';
 import 'package:flutter/material.dart';
 
+import 'controllers/send_message_controller.dart';
 import 'controllers/share_controller.dart';
 
 void main() {
@@ -39,10 +40,9 @@ class HomePage extends StatelessWidget{
           ),
           Row(
             children: [
-              Expanded(child: Button(radius: 50.0, id: 'shareButton', iconSize: 20.0, controller: ShareController(icon: Icons.share))),
-              Expanded(child: Button(radius: 100.0, id: 'playButton', iconSize: 40.0, controller: RadioController(icon: Icons.play_arrow))),
-              Expanded(child: Button(radius: 50.0, id: 'sendMessageButton', iconSize: 20.0, controller: ShareController(icon: Icons.message))),
-
+              Expanded(child: AnimatedButton(controller: ShareController(icon: Icons.share), buttonProperties: ButtonProperties(radius: ButtonProperties.LITTLE_BUTTON))),
+              Expanded(child: AnimatedButton(controller: RadioController(icon: Icons.play_arrow), buttonProperties: ButtonProperties(radius: ButtonProperties.BIG_BUTTON))),
+              Expanded(child: AnimatedButton(controller: SendMessageController(icon: Icons.message), buttonProperties: ButtonProperties(radius: ButtonProperties.LITTLE_BUTTON))),
             ],
           )
         ],
