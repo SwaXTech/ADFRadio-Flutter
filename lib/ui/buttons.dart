@@ -23,28 +23,6 @@ class ButtonProperties {
   double iconSize() => radius * 0.4;
 }
 
-class Button extends StatelessWidget {
-  final ButtonProperties buttonProperties;
-  final onPressed;
-  final icon;
-
-  const Button({Key key, this.icon, this.buttonProperties, this.onPressed});
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      child: buildButton(
-          buttonProperties.radius,
-          buttonProperties.alignment,
-          Icon(icon,
-              size: buttonProperties.iconSize(),
-              color: buttonProperties.iconColor)),
-      style: circleButtonStyle(buttonProperties.buttonColor),
-      onPressed: onPressed,
-    );
-  }
-}
-
 class AnimatedButton extends StatelessWidget {
 
   final controller;
