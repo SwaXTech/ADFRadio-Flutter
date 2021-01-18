@@ -1,17 +1,19 @@
+import 'package:adfradio/model/song.dart';
 import 'package:flutter/services.dart';
 
 class InfoAPI{
   static const platform_name = "/info";
-  static const platform_channel = const MethodChannel(platform_name);
+  static final platformChannel = MethodChannel(platform_name);
   static const URL = 'url';
   static const METADATA = 'metadata';
 
-  InfoAPI(){
+  InfoAPI(updateSong){
 
-    platform_channel.setMethodCallHandler((call){
+    platformChannel.setMethodCallHandler((call){
 
       if(call.method == METADATA){
-        print(call.arguments);
+        Song song = Song(call.arguments[1].toString(), call.arguments[0].toString());
+        updateSong(song);
       }
 
       return null;
