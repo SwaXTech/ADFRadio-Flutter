@@ -16,6 +16,18 @@ https://exoplayer.dev/
 
 https://github.com/fethica/FRadioPlayer
 
+## Design inspired by:
+
+https://dribbble.com/shots/14814969-Radio-App
+
+## Logger
+
+https://pub.dev/packages/logger
+
+
+### Coloring logs
+https://github.com/leisim/logger/pull/44
+
 
 
 
