@@ -8,16 +8,18 @@ import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.IBinder
-import android.util.Log
-import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ExoPlayerFactory
-import com.google.android.exoplayer2.SimpleExoPlayer
+import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.Player.EventListener
+import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.audio.AudioAttributes
+import com.google.android.exoplayer2.audio.AudioListener
+import com.google.android.exoplayer2.audio.AudioRendererEventListener
 import com.google.android.exoplayer2.metadata.MetadataOutput
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
+import com.google.android.exoplayer2.util.Log
 import com.google.android.exoplayer2.util.Util
 
 
@@ -34,7 +36,9 @@ class AudioPlayerService : Service() {
 
     override fun onCreate() {
         startForeground()
-        Log.d("Radio Player", "Radio service created")
+        Log.setLogLevel(Log.LOG_LEVEL_INFO) // Log de exoplayer
+        LogAPI.info("[ExoPlayer] -> Creating Service")
+        LogAPI.debug("[ExoPlayer] -> Exoplayer´s log level: ${Log.getLogLevel()}")
         super.onCreate()
         val context: Context = this
         val audioAttributes = AudioAttributes.Builder()
@@ -44,13 +48,13 @@ class AudioPlayerService : Service() {
         player = ExoPlayerFactory.newSimpleInstance(context, DefaultTrackSelector())
 
         player?.setAudioAttributes(audioAttributes,  /* handleAudioFocus= */true)
-        player?.addMetadataOutput(MetadataOutput { metadata ->
-            Log.i("Metadata:", "Info: " + metadata[0])
-            if (metadata.length() != 0) { // TODO: Extraer info
-                com.google.android.exoplayer2.util.Log.i("Exoplayer INFO", metadata[0].toString())
+        player?.addMetadataOutput { metadata ->
+            if (metadata.length() != 0) {
+                LogAPI.debug("[ExoPlayer] -> Metadata detected: $metadata")
                 currentSong.setMetadata(metadata[0].toString())
             }
-        })
+        }
+
         dataSourceFactory = DefaultDataSourceFactory(
                 context,  //TODO: Abstraer ADF Radio
                 Util.getUserAgent(context, "ADFRadio")
@@ -107,6 +111,7 @@ class AudioPlayerService : Service() {
         player!!.release()
         player = null
         Song.removeListener(listener!!)
+        LogAPI.info("[ExoPlayer] -> Destroying service")
         super.onDestroy()
     }
 
