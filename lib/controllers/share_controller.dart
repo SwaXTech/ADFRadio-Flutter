@@ -1,4 +1,5 @@
 import 'package:adfradio/controllers/button_controller.dart';
+import 'package:adfradio/util/logger.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:flutter/material.dart';
 
@@ -15,7 +16,7 @@ class ShareController extends GetxController implements ButtonController{
 
   @override
   onPressed() {
-    print("Share controller");
+    Log.info("Share controller");
   }
 
   @override

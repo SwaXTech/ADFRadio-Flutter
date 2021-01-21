@@ -10,10 +10,14 @@ import os
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
 
-        let infoApi: InfoAPI = InfoAPI(window: window)
+        let log = LogAPI(window: window)
+        
+        let infoApi: InfoAPI = InfoAPI(window: window, log: log)
         
         let radio = Radio(infoApi: infoApi)
         _ = RadioAPI(window: window, radio: radio)
+        
+        
         
         
     
@@ -93,26 +97,31 @@ class RadioAPI{
     private let STOP = "stop"
     private let ISPLAYING = "isPlaying"
     
-    init(window: UIWindow, radio: Radio) {
+    init(window: UIWindow, radio: Radio, log: LogAPI) {
         let controller : FlutterViewController = window.rootViewController as! FlutterViewController
         let radioChannel = FlutterMethodChannel(name: CHANNEL, binaryMessenger: controller as! FlutterBinaryMessenger)
            
         radioChannel.setMethodCallHandler({
           (call: FlutterMethodCall, result: FlutterResult) -> Void in
-            os_log("PlatformChannel Called.")
             
             switch call.method{
-                
-            case self.PLAY:
-                radio.play()
-                break
-            case self.STOP:
-                radio.stop()
-                break
-            case self.ISPLAYING:
-                result(Bool(radio.isPlaying()))
-            default:
-                break
+                case self.PLAY:
+                    log.info(msg: "[Radio API] -> Starting Radio")
+                    radio.play()
+                    break
+                case self.STOP:
+                    log.info(msg: "[Radio API] -> Stopping Radio")
+                    radio.stop()
+                    break
+                case self.ISPLAYING:
+                    
+                    let isPlaying = Bool(radio.isPlaying())
+                    let msg = isPlaying ? "Radio is Playing" : "Radio is not playing"
+                    
+                    log.info(msg: "[Radio API] -> Sending radio status: \(msg)")
+                    result(isPlaying)
+                default:
+                    break
             }
             
         })
@@ -126,15 +135,62 @@ class InfoAPI{
     private let METADATA = "metadata"
     private var controller: FlutterViewController
     private var infoChannel: FlutterMethodChannel
+    private let log: LogAPI;
     
-    init(window: UIWindow) {
+    init(window: UIWindow, log: LogAPI) {
         controller = window.rootViewController as! FlutterViewController
         infoChannel = FlutterMethodChannel(name: CHANNEL, binaryMessenger: controller as! FlutterBinaryMessenger)
         
+        self.log = log;
     }
     
     func sendMetadata(title: String, artist: String){
+        log.info(msg: "[Info API] -> Sending Metadata: \(title) - \(artist) ")
         infoChannel.invokeMethod(METADATA, arguments: [title, artist])
+    }
+    
+}
+
+
+class LogAPI{
+    
+    private static let CHANNEL = "/log"
+    private static let ERROR = "error"
+    private static let WARNING = "warning"
+    private static let WTF = "whatTheFailure"
+    private static let DEBUG = "debug"
+    private static let INFO = "info"
+    
+    private var controller: FlutterViewController
+    private var logChannel: FlutterMethodChannel
+    
+    init(window: UIWindow) {
+        controller = window.rootViewController as! FlutterViewController
+        logChannel = FlutterMethodChannel(name: LogAPI.CHANNEL, binaryMessenger: controller as! FlutterBinaryMessenger)
+    }
+    
+    func log(level: String, msg: String){
+        logChannel.invokeMethod(level, arguments: "[iOS] -> \(msg)")
+    }
+    
+    func debug(msg: String){
+        log(level: LogAPI.DEBUG, msg: msg)
+    }
+    
+    func info(msg: String){
+        log(level: LogAPI.INFO, msg: msg)
+    }
+    
+    func warning(msg: String){
+        log(level: LogAPI.WARNING, msg: msg)
+    }
+
+    func wtf(msg: String){
+        log(level: LogAPI.WTF, msg: msg)
+    }
+    
+    func error(msg: String){
+        log(level: LogAPI.ERROR, msg: msg)
     }
     
 }

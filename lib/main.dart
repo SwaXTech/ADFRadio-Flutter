@@ -1,22 +1,27 @@
 import 'package:adfradio/controllers/radio_controller.dart';
+import 'package:adfradio/platform_api/log_api.dart';
 import 'package:adfradio/ui/buttons.dart';
 import 'package:adfradio/util/background.dart';
+import 'package:adfradio/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
+import 'package:logger/logger.dart';
 import 'controllers/send_message_controller.dart';
 import 'controllers/share_controller.dart';
 import 'controllers/text_controller.dart';
 
 void main() {
   Paint.enableDithering = true;
+  Log.setLogLevel(Level.debug);
+  Log.debug("Initializing APP");
+  LogAPI();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-
     return GetMaterialApp(
       title: 'ADFRadio',
       theme: ThemeData(

@@ -1,4 +1,5 @@
 import 'package:adfradio/controllers/button_controller.dart';
+import 'package:adfradio/util/logger.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class SendMessageController extends GetxController implements ButtonController{
 
   @override
   onPressed() {
-    print("Send Message controller");
+    Log.info("Send Message Button pressed");
   }
 
   @override
