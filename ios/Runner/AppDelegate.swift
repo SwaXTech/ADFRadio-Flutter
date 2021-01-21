@@ -14,13 +14,9 @@ import os
         
         let infoApi: InfoAPI = InfoAPI(window: window, log: log)
         
-        let radio = Radio(infoApi: infoApi)
-        _ = RadioAPI(window: window, radio: radio)
+        let radio = Radio(infoApi: infoApi, log: log)
+        _ = RadioAPI(window: window, radio: radio, log: log)
         
-        
-        
-        
-    
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
       }
@@ -33,24 +29,27 @@ class Radio: FRadioPlayerDelegate{
     private let loading_finished = FRadioPlayerState.loadingFinished.description
     private let player: FRadioPlayer
     private var infoApi: InfoAPI
+    private var log: LogAPI
     
-    init(infoApi: InfoAPI) {
+    init(infoApi: InfoAPI, log: LogAPI) {
         
         self.infoApi = infoApi
+        self.log = log
         player = FRadioPlayer.shared
         player.delegate = self
         player.isAutoPlay = false
         player.enableArtwork = false
         player.radioURL = URL(string: "https://adfradio.com.ar/radio/8000/live")
         
-        
     }
     
     func play(){
+        log.info(msg: "[Radio] -> Playing")
         player.play()
     }
     
     func stop(){
+        log.info(msg: "[Radio] -> Stopping")
         player.stop()
     }
     
@@ -62,12 +61,17 @@ class Radio: FRadioPlayerDelegate{
         return state.description == loading_finished
     }
     
-    func radioPlayer(_ player: FRadioPlayer, playbackStateDidChange state: FRadioPlaybackState) {}
+    func radioPlayer(_ player: FRadioPlayer, playbackStateDidChange state: FRadioPlaybackState) {
+        log.debug(msg: "[Radio] -> Playback State changed: \(state)")
+    }
        
    // Al terminar de cargar, aunque no esté reproduciendo, el player queda pausado y al darle play
    // queda retrasado con respecto al live. Por lo tanto decidí que cuando termina de cargar
    // darle un stop forzoso con el objetivo de que cuando se de play quede al final de la transmisión
     func radioPlayer(_ player: FRadioPlayer, playerStateDidChange state: FRadioPlayerState) {
+        
+        log.debug(msg: "[Radio] -> PlayerState State changed: \(state)")
+        
         if loadingFinished(state) && !player.isPlaying {
             player.stop()
         }
@@ -76,11 +80,9 @@ class Radio: FRadioPlayerDelegate{
     func radioPlayer(_ player: FRadioPlayer, metadataDidChange artistName: String?, trackName: String?) {
        
         if hasMetadata(trackName, artistName) && player.isPlaying{
-            os_log("FRadioPlayer: Metadata updated")
+            
             let songname = trackName?.components(separatedBy: "[")[0]
             infoApi.sendMetadata(title: songname!, artist: artistName!)
-        } else {
-           os_log("FRadioPlayer: No metadata")
         }
     }
     
