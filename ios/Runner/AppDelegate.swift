@@ -62,7 +62,7 @@ class Radio: FRadioPlayerDelegate{
     }
     
     func radioPlayer(_ player: FRadioPlayer, playbackStateDidChange state: FRadioPlaybackState) {
-        log.debug(msg: "[Radio] -> Playback State changed: \(state)")
+        log.debug(msg: "[Radio] -> Playback State changed: \(state.description)")
     }
        
    // Al terminar de cargar, aunque no esté reproduciendo, el player queda pausado y al darle play

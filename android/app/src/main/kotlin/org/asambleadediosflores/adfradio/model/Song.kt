@@ -1,5 +1,6 @@
-package org.asambleadediosflores.adfradio
+package org.asambleadediosflores.adfradio.model
 
+import org.asambleadediosflores.adfradio.util.Converter
 import java.util.*
 
 class Song(private var title: String?, private var artist: String?) {
@@ -10,7 +11,7 @@ class Song(private var title: String?, private var artist: String?) {
     }
 
     fun getTitle(): String? {
-        return if (title == null || title != "") title else defaultSongName
+        return if (title == null || title != "") title else Data.defaultSongName
     }
 
     fun setTitle(title: String?) {
@@ -19,7 +20,7 @@ class Song(private var title: String?, private var artist: String?) {
     }
 
     fun getArtist(): String? {
-        return if (artist == null || artist != "") artist else defaultArtistName
+        return if (artist == null || artist != "") artist else Data.defaultArtistName
     }
 
     fun setArtist(artist: String?) {

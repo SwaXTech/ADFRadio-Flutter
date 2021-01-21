@@ -1,15 +1,18 @@
-package org.asambleadediosflores.adfradio
+package org.asambleadediosflores.adfradio.platformChannel
 
 import android.content.Context
 import android.content.Intent
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.FlutterView
+import org.asambleadediosflores.adfradio.util.isPlaying
+import org.asambleadediosflores.adfradio.util.play
+import org.asambleadediosflores.adfradio.util.stop
 
-val RADIOCHANNEL = "/radio"
-val PLAY = "play"
-val STOP = "stop"
-val ISPLAYING = "isPlaying"
+const val RADIOCHANNEL = "/radio"
+const val PLAY = "play"
+const val STOP = "stop"
+const val ISPLAYING = "isPlaying"
 
 fun receivePlatformChannelMessage(context: Context, player: Intent, flutterView: FlutterView) {
     MethodChannel(flutterView, RADIOCHANNEL).setMethodCallHandler { call, result ->

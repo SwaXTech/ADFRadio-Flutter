@@ -16,17 +16,23 @@ class RadioController extends GetxController implements ButtonController{
     super.onInit();
     setIcon();
 
-    if(isPlaying()){
-      Log.info("Initializing Radio Controller: Radio is Playing");
-    } else {
-      Log.info("Initializing Radio Controller: Radio is not Playing");
-    }
+    logInit();
 
+  }
+
+  void logInit() {
+    RadioApi.isPlaying().then((isPlaying){
+      if(isPlaying){
+        Log.info("Initializing Radio Controller: Radio is Playing");
+      } else {
+        Log.info("Initializing Radio Controller: Radio is not Playing");
+      }
+      
+    });
   }
 
   @override
   void onPressed() {
-
     log();
     RadioApi.toggleState();
     setIcon();
@@ -34,19 +40,24 @@ class RadioController extends GetxController implements ButtonController{
   }
 
   void log() {
-    var _isPlaying = isPlaying();
+
+    RadioApi.isPlaying().then((_isPlaying){
+
+      if(_isPlaying && isPauseButton())
+        Log.debug("Pause button was pressed. Stopping Radio");
+
+      if(!_isPlaying && isPlayButton())
+        Log.debug("Play button was pressed. Starting Radio");
+
+      if(_isPlaying && isPlayButton())
+        Log.wtf("Play button was pressed. But radio is already playing");
+
+      if(!_isPlaying && isPauseButton())
+        Log.wtf("Pause button was pressed. But radio is stopped");
+
+    });
     
-    if(_isPlaying && isPauseButton())
-      Log.debug("Pause button was pressed. Stopping Radio");
-    
-    if(!_isPlaying && isPlayButton())
-      Log.debug("Play button was pressed. Starting Radio");
-    
-    if(_isPlaying && isPlayButton())
-      Log.wtf("Play button was pressed. But radio is already playing");
-    
-    if(!_isPlaying && isPauseButton())
-      Log.wtf("Pause button was pressed. But radio is stopped");
+
     
   }
 
@@ -60,11 +71,6 @@ class RadioController extends GetxController implements ButtonController{
       builder: (_controller) =>
           Icon(_controller.icon, size: buttonProperties.iconSize(), color: buttonProperties.iconColor));
 
-  bool isPlaying(){
-    bool _isPlaying;
-    RadioApi.isPlaying().then((isPlaying) => _isPlaying = isPlaying);
-    return _isPlaying;
-  }
 
   bool isPauseButton() => icon == Icons.pause;
   bool isPlayButton() => icon == Icons.play_arrow;

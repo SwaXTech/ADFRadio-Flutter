@@ -1,4 +1,4 @@
-package org.asambleadediosflores.adfradio
+package org.asambleadediosflores.adfradio.platformChannel
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.FlutterView
 
@@ -12,7 +12,7 @@ class InfoAPI (private val flutterView: FlutterView){
 
     fun sendMetadata(artist: String, title: String){
         LogAPI.info("[Info API] -> Sending Metadata: $title - $artist")
-        sendMessage(METADATA, arrayListOf(artist, title))
+        sendMessage(METADATA, arrayListOf(title, artist))
     }
 }
 

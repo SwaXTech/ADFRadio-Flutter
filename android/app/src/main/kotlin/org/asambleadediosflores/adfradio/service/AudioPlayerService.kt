@@ -1,26 +1,29 @@
-package org.asambleadediosflores.adfradio
+package org.asambleadediosflores.adfradio.service
 
 import android.app.*
 import android.app.Notification.MediaStyle
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.media.session.PlaybackState
 import android.net.Uri
 import android.os.Build
 import android.os.IBinder
+
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.Player.EventListener
-import com.google.android.exoplayer2.analytics.AnalyticsListener
 import com.google.android.exoplayer2.audio.AudioAttributes
-import com.google.android.exoplayer2.audio.AudioListener
-import com.google.android.exoplayer2.audio.AudioRendererEventListener
-import com.google.android.exoplayer2.metadata.MetadataOutput
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.Log
 import com.google.android.exoplayer2.util.Util
+import org.asambleadediosflores.adfradio.*
+import org.asambleadediosflores.adfradio.model.Data
+import org.asambleadediosflores.adfradio.model.MetadataListener
+import org.asambleadediosflores.adfradio.model.Song
+import org.asambleadediosflores.adfradio.platformChannel.LogAPI
 
 
 class AudioPlayerService : Service() {
@@ -35,36 +38,78 @@ class AudioPlayerService : Service() {
     private var listener: MetadataListener? = null
 
     override fun onCreate() {
-        startForeground()
-        Log.setLogLevel(Log.LOG_LEVEL_INFO) // Log de exoplayer
-        LogAPI.info("[ExoPlayer] -> Creating Service")
-        LogAPI.debug("[ExoPlayer] -> Exoplayer´s log level: ${Log.getLogLevel()}")
+        initNotification()
+        initLogs()
         super.onCreate()
         val context: Context = this
-        val audioAttributes = AudioAttributes.Builder()
-                .setUsage(C.USAGE_MEDIA)
-                .setContentType(C.CONTENT_TYPE_MUSIC)
-                .build()
+        val audioAttributes = audioAttributes()
         player = ExoPlayerFactory.newSimpleInstance(context, DefaultTrackSelector())
-
         player?.setAudioAttributes(audioAttributes,  /* handleAudioFocus= */true)
-        player?.addMetadataOutput { metadata ->
-            if (metadata.length() != 0) {
-                LogAPI.debug("[ExoPlayer] -> Metadata detected: $metadata")
-                currentSong.setMetadata(metadata[0].toString())
-            }
-        }
+        addListeners()
+        dataSource(context)
+    }
 
+    private fun dataSource(context: Context) {
         dataSourceFactory = DefaultDataSourceFactory(
                 context,  //TODO: Abstraer ADF Radio
                 Util.getUserAgent(context, "ADFRadio")
         )
-
-        
-        
     }
 
-    private fun startForeground() {
+    private fun audioAttributes() = AudioAttributes.Builder()
+            .setUsage(C.USAGE_MEDIA)
+            .setContentType(C.CONTENT_TYPE_MUSIC)
+            .build()
+
+    private fun initLogs() {
+        Log.setLogLevel(Log.LOG_LEVEL_INFO) // Log de exoplayer
+        LogAPI.info("[ExoPlayer] -> Creating Service")
+        LogAPI.debug("[ExoPlayer] -> Exoplayer´s log level: ${Log.getLogLevel()}")
+    }
+
+    private fun addListeners() {
+        player?.addMetadataOutput { metadata ->
+            if (metadata.length() != 0) {
+                LogAPI.debug("[ExoPlayer] -> Metadata detected: $metadata")
+                Data.currentSong.setMetadata(metadata[0].toString())
+            }
+        }
+
+
+        val eventListener = object : EventListener {
+            override fun onPlayerError(error: ExoPlaybackException?) {
+                //super.onPlayerError(error) TODO: <--
+                if (error != null) {
+                    LogAPI.error("[ExoPlayer] -> ${error.cause}")
+                }
+            }
+
+            override fun onLoadingChanged(isLoading: Boolean) {
+                // super.onLoadingChanged(isLoading)
+                LogAPI.debug("[ExoPlayer] -> Loading state changed: $isLoading")
+            }
+
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                // super.onPlayerStateChanged(playWhenReady, playbackState)
+
+                val state = when (playbackState) {
+                    PlaybackState.STATE_CONNECTING -> "Connecting"
+                    PlaybackState.STATE_BUFFERING -> "Buffering"
+                    PlaybackState.STATE_ERROR -> "Error"
+                    PlaybackState.STATE_PAUSED -> "Paused"
+                    PlaybackState.STATE_PLAYING -> "Playing"
+                    PlaybackState.STATE_STOPPED -> "Stopped"
+                    else -> "None" // Hay otros más pero no nos interesan
+                }
+
+                LogAPI.debug("[ExoPlayer] -> State changed: $state")
+            }
+        }
+
+        player?.addListener(eventListener)
+    }
+
+    private fun initNotification() {
 
         val logoBitmap = BitmapFactory.decodeResource(resources, R.drawable.boton)
 
@@ -97,8 +142,8 @@ class AudioPlayerService : Service() {
 
         listener = object : MetadataListener {
             override fun onSongChanged() {
-                builder!!.setContentTitle(currentSong.getTitle())
-                builder!!.setContentText(currentSong.getArtist())
+                builder!!.setContentTitle(Data.currentSong.getTitle())
+                builder!!.setContentText(Data.currentSong.getArtist())
                 noti = builder!!.build()
                 manager!!.notify(NOTIFICATION_ID, noti)
             }
@@ -120,7 +165,7 @@ class AudioPlayerService : Service() {
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse("https://adfradio.com.ar/radio/8000/live"))
+        mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory).createMediaSource(Uri.parse(Data.audioURL))
         player!!.prepare(mediaSource)
         player!!.playWhenReady = true
         return START_STICKY

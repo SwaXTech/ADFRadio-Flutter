@@ -1,17 +1,16 @@
-package org.asambleadediosflores.adfradio
+package org.asambleadediosflores.adfradio.platformChannel
 
-import android.util.Log
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.FlutterView
 
 object LogAPI {
 
-    private val LOGCHANNEL = "/log"
-    private val ERROR = "error"
-    private val WARNING = "warning"
-    private val WTF = "whatTheFailure"
-    private val INFO = "info"
-    private val DEBUG = "debug"
+    private const val LOGCHANNEL = "/log"
+    private const val ERROR = "error"
+    private const val WARNING = "warning"
+    private const val WTF = "whatTheFailure"
+    private const val INFO = "info"
+    private const val DEBUG = "debug"
     private lateinit var platformChannel: MethodChannel;
 
     fun initPlaformChannel(flutterView: FlutterView) {

@@ -2,7 +2,9 @@ import 'package:logger/logger.dart';
 
 class Log{
 
-  static final _logger = Logger();
+  static final _logger = Logger(
+    printer: PrefixPrinter(PrettyPrinter(colors: false)),
+  );
 
   static void setLogLevel(level){
     Logger.level = level;

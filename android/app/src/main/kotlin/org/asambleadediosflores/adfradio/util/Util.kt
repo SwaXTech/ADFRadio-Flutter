@@ -1,4 +1,4 @@
-package org.asambleadediosflores.adfradio
+package org.asambleadediosflores.adfradio.util
 
 import android.app.ActivityManager
 import android.content.Context

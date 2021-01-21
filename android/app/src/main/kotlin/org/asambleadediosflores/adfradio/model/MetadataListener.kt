@@ -1,4 +1,4 @@
-package org.asambleadediosflores.adfradio
+package org.asambleadediosflores.adfradio.model
 
 import java.util.*
 

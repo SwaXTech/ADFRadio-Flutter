@@ -5,6 +5,14 @@ import android.os.Bundle
 import io.flutter.app.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugins.GeneratedPluginRegistrant
+import org.asambleadediosflores.adfradio.model.Data
+import org.asambleadediosflores.adfradio.model.MetadataListener
+import org.asambleadediosflores.adfradio.model.Song
+import org.asambleadediosflores.adfradio.platformChannel.InfoAPI
+import org.asambleadediosflores.adfradio.platformChannel.LogAPI
+import org.asambleadediosflores.adfradio.platformChannel.receivePlatformChannelMessage
+import org.asambleadediosflores.adfradio.service.AudioPlayerService
+import org.asambleadediosflores.adfradio.util.stop
 
 
 class MainActivity() : FlutterActivity() {
@@ -23,7 +31,7 @@ class MainActivity() : FlutterActivity() {
         api = InfoAPI(flutterView)
         listener = object : MetadataListener {
             override fun onSongChanged() {
-                api.sendMetadata(currentSong.getArtist()!!, currentSong.getTitle()!!)
+                api.sendMetadata(Data.currentSong.getArtist()!!, Data.currentSong.getTitle()!!)
             }
         }
         Song.addEventListener(listener!!)

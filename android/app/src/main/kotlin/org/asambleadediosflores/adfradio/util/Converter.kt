@@ -1,4 +1,6 @@
-package org.asambleadediosflores.adfradio
+package org.asambleadediosflores.adfradio.util
+
+import org.asambleadediosflores.adfradio.model.Data
 
 /**
  * La siguiente clase separa un texto con la forma Artista - Título */
@@ -23,12 +25,12 @@ class Converter(currentsong: String) {
                 artist = text.substring(0, divider - 1)
                 title = text.substring(divider + 2)
             } else {
-                artist = defaultArtistName
+                artist = Data.defaultArtistName
                 title = text
             }
         } else {
-            artist = defaultArtistName
-            title = defaultSongName
+            artist = Data.defaultArtistName
+            title = Data.defaultSongName
         }
     }
 }

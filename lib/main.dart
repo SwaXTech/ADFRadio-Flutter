@@ -15,13 +15,16 @@ void main() {
   Paint.enableDithering = true;
   Log.setLogLevel(Level.debug);
   Log.debug("Initializing APP");
-  LogAPI();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
+
+    LogAPI();
+
     return GetMaterialApp(
       title: 'ADFRadio',
       theme: ThemeData(
