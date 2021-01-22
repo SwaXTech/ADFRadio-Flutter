@@ -15,20 +15,7 @@ class RadioController extends GetxController implements ButtonController{
   void onInit() {
     super.onInit();
     setIcon();
-
     logInit();
-
-  }
-
-  void logInit() {
-    RadioApi.isPlaying().then((isPlaying){
-      if(isPlaying){
-        Log.info("Initializing Radio Controller: Radio is Playing");
-      } else {
-        Log.info("Initializing Radio Controller: Radio is not Playing");
-      }
-      
-    });
   }
 
   @override
@@ -38,6 +25,24 @@ class RadioController extends GetxController implements ButtonController{
     setIcon();
     update();
   }
+
+  @override
+  buttonController(buttonProperties) {
+    return GetBuilder<RadioController>(
+      init: this,
+      builder: (_controller) {
+        return Icon(
+            _controller.icon,
+            size: buttonProperties.iconSize(),
+            color: buttonProperties.iconColor
+        );
+      });
+  }
+
+  void setIcon() => RadioApi.isPlaying().then((value) => icon = value? Icons.play_arrow : Icons.pause);
+
+  bool isPauseButton() => icon == Icons.pause;
+  bool isPlayButton() => icon == Icons.play_arrow;
 
   void log() {
 
@@ -56,23 +61,14 @@ class RadioController extends GetxController implements ButtonController{
         Log.wtf("Pause button was pressed. But radio is stopped");
 
     });
-    
-
-    
   }
 
-  void setIcon(){
-    RadioApi.isPlaying().then((value) => icon = value? Icons.play_arrow : Icons.pause);
+  void logInit() {
+
+    const String prefix = "[Radio Controller] -> Initializing: ";
+    const String playing = "Radio is Playing";
+    const String notPlaying = "Radio is not Playing";
+
+    RadioApi.isPlaying().then((isPlaying)=> Log.info(prefix + (isPlaying ? playing : notPlaying)));
   }
-
-  @override
-  buttonController(buttonProperties) => GetBuilder<RadioController>(
-      init: this,
-      builder: (_controller) =>
-          Icon(_controller.icon, size: buttonProperties.iconSize(), color: buttonProperties.iconColor));
-
-
-  bool isPauseButton() => icon == Icons.pause;
-  bool isPlayButton() => icon == Icons.play_arrow;
-
 }

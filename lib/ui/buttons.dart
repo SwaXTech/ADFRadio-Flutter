@@ -1,34 +1,13 @@
-import 'package:adfradio/controllers/radio_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:adfradio/model/button_properties.dart';
 
-class ButtonProperties {
-  static const BIG_BUTTON = 100.0;
-  static const LITTLE_BUTTON = 50.0;
-  static const DEFAULT_COLOR = Color.fromRGBO(39, 39, 39, 0.4);
-
-  final radius;
-  final alignment;
-  final iconColor;
-  final buttonColor;
-
-  ButtonProperties(
-      {Key key,
-      this.radius,
-      this.alignment = Alignment.center,
-      this.iconColor = Colors.white,
-      this.buttonColor = DEFAULT_COLOR});
-
-  double iconSize() => radius * 0.4;
-}
-
-class AnimatedButton extends StatelessWidget {
+class ButtonWithController extends StatelessWidget {
 
   final controller;
   final ButtonProperties buttonProperties;
 
-  AnimatedButton({
+  ButtonWithController({
     Key key,
     this.controller,
     this.buttonProperties
@@ -37,30 +16,42 @@ class AnimatedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-        child: buildButton(buttonProperties.radius, buttonProperties.alignment, controller.buttonController(buttonProperties)),
+        child: _ButtonContainer(radius: buttonProperties.radius, alignment: buttonProperties.alignment, child: controller.buttonController(buttonProperties)),
         style: circleButtonStyle(buttonProperties.buttonColor),
         onPressed: controller.onPressed,
     );
   }
+
+  ButtonStyle circleButtonStyle(buttonColor) {
+    return ElevatedButton.styleFrom(
+        shape: const CircleBorder(), primary: buttonColor);
+  }
 }
 
-setController(buttonProperties, controller) => GetBuilder<RadioController>(
-    init: controller,
-    builder: (_controller) =>
-        Icon(_controller.icon, size: buttonProperties.iconSize(), color: buttonProperties.iconColor));
+class _ButtonContainer extends StatelessWidget {
 
-BoxDecoration boxDecoration() => const BoxDecoration(shape: BoxShape.circle);
+  final radius;
+  final alignment;
+  final child;
 
-ButtonStyle circleButtonStyle(buttonColor) {
-  return ElevatedButton.styleFrom(
-      shape: const CircleBorder(), primary: buttonColor);
+  const _ButtonContainer({
+    Key key,
+    this.radius,
+    this.alignment,
+    this.child
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        width: radius,
+        height: radius,
+        alignment: alignment,
+        decoration: boxDecoration(),
+        child: child);
+  }
+
+  BoxDecoration boxDecoration() => const BoxDecoration(shape: BoxShape.circle);
 }
 
-Container buildButton(radius, alignment, child) {
-  return Container(
-      width: radius,
-      height: radius,
-      alignment: alignment,
-      decoration: boxDecoration(),
-      child: child);
-}
+
