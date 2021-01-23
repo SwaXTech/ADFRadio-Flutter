@@ -12,8 +12,7 @@ class SongInfo extends StatelessWidget {
 
     Log.debug("Building SongInfo");
 
-    return Expanded(
-      child: Container(
+    return Container(
         alignment: Alignment.center,
         child: GetBuilder<TextController>(
           init: controller,
@@ -25,7 +24,6 @@ class SongInfo extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
           ),
         ),
-      ),
-    );
+      );
   }
 }
