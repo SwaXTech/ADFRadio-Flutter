@@ -9,7 +9,9 @@ class RadioController extends GetxController implements ButtonController{
   @override
   var icon;
 
-  RadioController({Key key, this.icon});
+  final waveController;
+
+  RadioController({Key key, this.icon, this.waveController});
 
   @override
   void onInit() {
@@ -23,6 +25,7 @@ class RadioController extends GetxController implements ButtonController{
     log();
     RadioApi.toggleState();
     setIcon();
+    updateWave();
     update();
   }
 
@@ -40,6 +43,8 @@ class RadioController extends GetxController implements ButtonController{
   }
 
   void setIcon() => RadioApi.isPlaying().then((value) => icon = value? Icons.play_arrow : Icons.pause);
+
+  void updateWave() => RadioApi.isPlaying().then((value) => value? waveController.fadeIn() : waveController.fadeOut());
 
   bool isPauseButton() => icon == Icons.pause;
   bool isPlayButton() => icon == Icons.play_arrow;
