@@ -13,11 +13,10 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
-
     LogAPI();
+    Log.debug("Building APP");
     return GetMaterialApp(
       title: 'ADFRadio',
       theme: ThemeData(

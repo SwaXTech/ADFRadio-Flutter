@@ -1,4 +1,5 @@
 import 'package:adfradio/controllers/text_controller.dart';
+import 'package:adfradio/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -8,6 +9,9 @@ class SongInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Log.debug("Building SongInfo");
+
     return Expanded(
       child: Container(
         alignment: Alignment.center,

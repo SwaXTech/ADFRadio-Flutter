@@ -1,3 +1,4 @@
+import 'package:adfradio/util/logger.dart';
 import 'package:flutter/material.dart';
 
 class TopTitle extends StatelessWidget {
@@ -7,6 +8,9 @@ class TopTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Log.debug("Building TopTitle");
+
     return Container(
       alignment: Alignment.topCenter,
       padding: EdgeInsets.only(top: 50.0),

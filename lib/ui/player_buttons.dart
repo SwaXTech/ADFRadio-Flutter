@@ -3,12 +3,16 @@ import 'package:adfradio/controllers/send_message_controller.dart';
 import 'package:adfradio/controllers/share_controller.dart';
 import 'package:adfradio/model/button_properties.dart';
 import 'package:adfradio/ui/buttons.dart';
+import 'package:adfradio/util/logger.dart';
 import 'package:flutter/material.dart';
 
 class PlayerButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Log.debug("Building buttons");
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 70.0),
       child: Row(

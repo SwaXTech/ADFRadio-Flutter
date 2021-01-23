@@ -1,9 +1,11 @@
+import 'package:adfradio/util/logger.dart';
 import 'package:flutter/material.dart';
 
 class Background extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Log.debug("Building Background");
     return Container(
         decoration: const BoxDecoration(
             gradient: LinearGradient(

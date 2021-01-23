@@ -1,3 +1,4 @@
+import 'package:adfradio/util/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:adfradio/model/button_properties.dart';
@@ -15,6 +16,9 @@ class ButtonWithController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Log.debug("Building ButtonWithController");
+
     return ElevatedButton(
         child: _ButtonContainer(radius: buttonProperties.radius, alignment: buttonProperties.alignment, child: controller.buttonController(buttonProperties)),
         style: circleButtonStyle(buttonProperties.buttonColor),
@@ -43,6 +47,9 @@ class _ButtonContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    Log.debug("Building Button Container");
+
     return Container(
         width: radius,
         height: radius,
